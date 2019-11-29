@@ -238,8 +238,10 @@ class TestMatrixMethods(unittest.TestCase):
     def test_eigen(self):
         a = Matrix(3, 3, [4,41,78,48,28,21,26,13,11])
         c = a.eigen()
-        print(c[0])
-        # self.assertEqual(c.eigenvalue, c.eigenvector, 'Erro ao calcular o método de Gauss-Jordan')
+        self.assertEqual(c[0], 86.17849678492007, 'Erro ao calcular o método de Auto-valor')
+        self.assertEqual(c[1][0], 165.3990421004636, 'Erro ao calcular o método de Auto-vetor')
+        self.assertEqual(c[1][1], 167.568826835562, 'Erro ao calcular o método de Auto-vetor')
+        self.assertEqual(c[1][2], 86.17849678492007, 'Erro ao calcular o método de Auto-vetor')
 
 if __name__ == "__main__":
     unittest.main()

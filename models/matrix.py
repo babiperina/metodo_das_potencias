@@ -200,24 +200,45 @@ class Matrix(AbstractMatrix):
         pass
 
     def get_matrix_smaller_element(self, matrix):
-        smaller_element = 99999
-        if matrix is Matrix:
-            for element in matrix.data:
-                if element < smaller_element:
-                    smaller_element = element
-            return smaller_element
+        smaller_element = matrix.data[0]
+        for element in matrix.data:
+            if element < smaller_element:
+                smaller_element = element
+        return smaller_element
 
-    def get_eigen_value(self, A, NORMALIZED_X):
-        return A.dot(NORMALIZED_X)/NORMALIZED_X.dot(NORMALIZED_X)
+    def get_eigen_value(self, NORMALIZED_X):
+        # X = NORMALIZED_X;
+        # adotx = A * X
+        # xdotx = X * X
+        X = Matrix(NORMALIZED_X.cols, NORMALIZED_X.rows, NORMALIZED_X.data);
+        A = self.dot(NORMALIZED_X);
+        A = Matrix(A.cols, A.rows, A.data)
+        adotx = A.dot(NORMALIZED_X)
+        xdotx = X.dot(NORMALIZED_X)
 
+        # print('------********-------')
+        # print('------self-------')
+        # print(self)
+        # print('------NORMALIZED_X-------')
+        # print(NORMALIZED_X)
+        # print('------X(m_g_i)-------')
+        # print(X)
+        # print('------A(m_i*m_g_i)-------')
+        # print(A)
+        # print('------dot(A, X)-------')
+        # print(adotx)
+        # print('------dot(X, X)-------')
+        # print(xdotx)
+        # print('------********-------')
+        return adotx/xdotx
 
     def get_eigen_vector(self, EIGENVALUE, NORMALIZED_X):
-        return EIGENVALUE * NORMALIZED_X
+        return EIGENVALUE[1,1] * NORMALIZED_X
 
     # A = matrix nxn
     def eigen(self):
 
-        MAX_ITERATIONS = 50
+        MAX_ITERATIONS = 100
         MATRIX_SIZE = self.rows
         ITERATION = 1
 
@@ -225,13 +246,22 @@ class Matrix(AbstractMatrix):
         matriz_inicial = Matrix(MATRIX_SIZE, 1, data)
 
         while ITERATION <= MAX_ITERATIONS:
+            # if ITERATION == 1:
+            #     print('while ITERACAO <= MAX_ITERACOES:')
+            #     print(self)
+            #     print(matriz_inicial)
             X = self.dot(matriz_inicial)
+            # print(X)
             matriz_inicial = X
             menor_matriz = self.get_matrix_smaller_element(X)
+            # print(menor_matriz)
+            # print()
             ITERATION += 1
         NORMALIZED_X = X/menor_matriz
 
-        eigenvalues = self.get_eigen_value(self, NORMALIZED_X)
+        eigenvalues = self.get_eigen_value(NORMALIZED_X)
+        # print(eigenvalues)
         eigenvectors = self.get_eigen_vector(eigenvalues, NORMALIZED_X)
+        # print(eigenvectors)
 
-        return eigenvalues, eigenvectors
+        return [eigenvalues[1,1], [eigenvectors[1,1],eigenvectors[1,2],eigenvectors[1,3]]]
