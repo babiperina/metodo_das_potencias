@@ -1,4 +1,4 @@
-from abstracoes.abstract_matrix import AbstractMatrix
+from abstracts.abstract_matrix import AbstractMatrix
 
 
 class Matrix(AbstractMatrix):

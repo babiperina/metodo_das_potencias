@@ -1,5 +1,5 @@
 import unittest
-from models.matrix import Matrix
+from matrix import Matrix
 
 class TestMatrixMethods(unittest.TestCase):
 
