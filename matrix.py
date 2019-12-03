@@ -207,9 +207,10 @@ class Matrix(AbstractMatrix):
         return smaller_element
 
     def get_eigen_value(self, NORMALIZED_X):
-        X = Matrix(NORMALIZED_X.cols, NORMALIZED_X.rows, NORMALIZED_X.data);
+        X = NORMALIZED_X.transpose();
+        # Matrix(NORMALIZED_X.cols, NORMALIZED_X.rows, NORMALIZED_X.data);
         A = self.dot(NORMALIZED_X);
-        A = Matrix(A.cols, A.rows, A.data)
+        A = A.transpose();
         adotx = A.dot(NORMALIZED_X)
         xdotx = X.dot(NORMALIZED_X)
         return adotx/xdotx
@@ -219,7 +220,14 @@ class Matrix(AbstractMatrix):
 
     # A = matrix nxn
     def eigen(self):
-        return self.power_method()
+        A = self
+        print(A)
+        # gera B 
+        # B = A - lambda/|v1| . v1 . v1T
+        eigensA = self.power_method()
+        # qtdeIteracoes n
+        
+        return eigensA
 
     def power_method(self):
         MAX_ITERATIONS = 100
@@ -239,3 +247,10 @@ class Matrix(AbstractMatrix):
         eigenvalues = self.get_eigen_value(NORMALIZED_X)
         eigenvectors = self.get_eigen_vector(eigenvalues, NORMALIZED_X)
         return [eigenvalues[1, 1], [eigenvectors[1, 1], eigenvectors[1, 2], eigenvectors[1, 3]]]
+
+
+        # v - autovetor que eu descobri
+        # v1 * v1T(transposta)
+        # lambda auto valor
+        # lambda/modulo auto vetor
+        # B = A - lambda/|v1| . v1 . v1T
