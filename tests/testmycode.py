@@ -5,15 +5,14 @@ from matrix import Matrix
 
 # eigenvalue= 14.9998 = 15 -> 0,3,15
 # eigenvector= 1.0, -1.0, 0.5
-a = Matrix(3, 3, [8, -6, 2, -6, 7, -4, 2, -4, 3])
+# a = Matrix(3, 3, [8, -6, 2, -6, 7, -4, 2, -4, 3])
 
 # eigenvalue= 7.9998 = 8
 # eigenvector= 1.0, -0.5, 0.5
-# a = Matrix(3, 3, [6, -2, 2, -2, 3, -1, 2, -1, 3]) #ev 2,8
+a = Matrix(3, 3, [6, -2, 2, -2, 3, -1, 2, -1, 3]) #ev 2,8
 
 # eigenvalue= 6
 # a = Matrix(3, 3, [-4,14,0,-5,13,0,-1,0,2])
-
 
 a.eigen()
 # print(a.power_method())

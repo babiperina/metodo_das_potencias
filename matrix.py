@@ -219,6 +219,14 @@ class Matrix(AbstractMatrix):
         res = math.sqrt(soma)
         return res
 
+    def module(self, eigenvector):
+        # print(eigenvector)
+        module = 0
+        for d in eigenvector.data:
+            module = module + (d*d)
+        module = math.sqrt(module)
+        return module
+
     def get_matrix_bigger_element(self):
         bigger = self.data[0]
         for element in self.data:
@@ -227,32 +235,46 @@ class Matrix(AbstractMatrix):
         return bigger
 
     def eigen(self):
-        print('matriz: \n' + str(self))
-        result = self.power_method()
-        eigenvalue = result[0]
-        eigenvector = result[1]
-        print('eigenvalue: \n' + str(eigenvalue))
-        print('eigenvector: \n' + str(eigenvector))
+        # print('matriz: \n' + str(self))
+        # result = self.power_method()
+        # eigenvalue = result[0]
+        # eigenvector = result[1]
+        # print('eigenvalue: \n' + str(eigenvalue))
+        # print('eigenvector: \n' + str(eigenvector))
 
-        B = self.deflation(eigenvalue,eigenvector)
-        print('B: \n' + str(B))
+        A = self
+        eigenvalues = []
+        eigenvectors = []
+        for x in range(0,3):
+            B = A.power_method()
+            eigenvalue = B[0]
+            eigenvector = B[1]
+            eigenvalues.append(B[0])
+            eigenvectors.append(B[1])
+            print('eigenvalue: \n' + str(eigenvalue))
+            print('eigenvector: \n' + str(eigenvector))
+            A = A.deflation(eigenvalue, eigenvector)
 
-        result = B.power_method()
-        eigenvalue = result[0]
-        eigenvector = result[1]
-        print('eigenvalue: \n' + str(eigenvalue))
-        print('eigenvector: \n' + str(eigenvector))
 
-        B2 = B.deflation(eigenvalue, eigenvector)
-        print('B: \n' + str(B))
+        # B = self.deflation(eigenvalue,eigenvector)
+        # print('B: \n' + str(B))
+        #
+        # result = B.power_method()
+        # eigenvalue = result[0]
+        # eigenvector = result[1]
+        # print('eigenvalue: \n' + str(eigenvalue))
+        # print('eigenvector: \n' + str(eigenvector))
+        #
+        # B2 = B.deflation(eigenvalue, eigenvector)
+        # print('B: \n' + str(B))
+        #
+        # result = B2.power_method()
+        # eigenvalue = result[0]
+        # eigenvector = result[1]
+        # print('eigenvalue: \n' + str(eigenvalue))
+        # print('eigenvector: \n' + str(eigenvector))
 
-        result = B2.power_method()
-        eigenvalue = result[0]
-        eigenvector = result[1]
-        print('eigenvalue: \n' + str(eigenvalue))
-        print('eigenvector: \n' + str(eigenvector))
-
-        return  eigenvalue, eigenvector
+        return  eigenvalues, eigenvectors
 
     def power_method(self):
         MAX_ITERATIONS = 9
@@ -263,12 +285,12 @@ class Matrix(AbstractMatrix):
         matriz_inicial = Matrix(MATRIX_SIZE, 1, data)
 
         while ITERATION <= MAX_ITERATIONS:
-            print('ITERAÇÃO ' + str(ITERATION))
-            print('A= \n'+ str(self))
-            print('\nx= \n' + str(matriz_inicial))
+            # print('ITERAÇÃO ' + str(ITERATION))
+            # print('A= \n'+ str(self))
+            # print('\nx= \n' + str(matriz_inicial))
             x = self.dot(matriz_inicial)
             x = (1/x.get_matrix_bigger_element()) * x
-            print('x'+str(ITERATION)+'= ' + str(x))
+            # print('x'+str(ITERATION)+'= ' + str(x))
             matriz_inicial = x
             ITERATION += 1
         x = self.dot(matriz_inicial)
@@ -276,16 +298,19 @@ class Matrix(AbstractMatrix):
         #get eigenvalue
         eigenvalue = x.get_matrix_bigger_element()
         eigenvalue = float("{0:.2f}".format(eigenvalue))
-        print('eigenvalue= ' + str(eigenvalue))
+        # print('eigenvalue= ' + str(eigenvalue))
 
         #get eigenvector
         eigenvector = (1 / x.get_matrix_bigger_element()) * x
         eigenvector = eigenvector.float_format()
-        print('eigenvector= \n' + str(eigenvector))
+        # print('eigenvector= \n' + str(eigenvector))
 
         return eigenvalue, eigenvector
 
     def deflation(self, eigenvalue, eigenvector):
+        module = self.module(eigenvector)
+        # print(module)
+        eigenvector = eigenvector/module
         result = eigenvalue*(eigenvector.dot(eigenvector.transpose()))
         B = self - result
         return B

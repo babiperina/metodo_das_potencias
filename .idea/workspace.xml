@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d01aff66-9756-4bf3-bb8e-9adadfb59be8" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/deprecated.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/matrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/matrix.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/testmatrix.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testmatrix.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/testmycode.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/testmycode.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
