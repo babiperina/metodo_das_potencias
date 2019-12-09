@@ -235,13 +235,22 @@ class TestMatrixMethods(unittest.TestCase):
         self.assertAlmostEqual(c[2,4], -2, 10, 'Erro ao calcular o método de Gauss-Jordan')
         self.assertAlmostEqual(c[3,4], -2, 10, 'Erro ao calcular o método de Gauss-Jordan')
 
+    def test_norm(self):
+        a = Matrix(2,1,[-9,12])
+        self.assertEqual(a.norm(), 15, 'Erro ao calcular a norma')
+
+    def test_power_method(self):
+        a = Matrix(3, 3, [6, -2, 2, -2, 3, -1, 2, -1, 3])
+        result = a.power_method()
+        eigenvalue = result[0]
+        eigenvector = result[1]
+        self.assertEqual(eigenvalue, 7.9998, 'Erro ao calcular o auto-valor')
+        self.assertEqual(eigenvector[1,1], 1.0, 'Erro ao calcular o auto-vetor')
+        self.assertEqual(eigenvector[1,2], -0.5, 'Erro ao calcular o auto-vetor')
+        self.assertEqual(eigenvector[1,3], 0.5, 'Erro ao calcular o auto-vetor')
+
     def test_eigen(self):
-        a = Matrix(3, 3, [4,41,78,48,28,21,26,13,11])
-        c = a.eigen()
-        self.assertEqual(c[0], 86.17849678492007, 'Erro ao calcular o método de Auto-valor')
-        self.assertEqual(c[1][0], 165.3990421004636, 'Erro ao calcular o método de Auto-vetor')
-        self.assertEqual(c[1][1], 167.568826835562, 'Erro ao calcular o método de Auto-vetor')
-        self.assertEqual(c[1][2], 86.17849678492007, 'Erro ao calcular o método de Auto-vetor')
+        pass
 
 if __name__ == "__main__":
     unittest.main()

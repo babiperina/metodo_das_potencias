@@ -1,3 +1,4 @@
+import math
 from abstracts.abstract_matrix import AbstractMatrix
 
 
@@ -8,6 +9,9 @@ class Matrix(AbstractMatrix):
         """
 
     MSG_DIFFERENT_SIZES = "The matrixs doesn't have the same size"
+
+    def __len__(self):
+        return len(self.data)
 
     def __getitem__(self, key):
         i, j = key
@@ -28,7 +32,7 @@ class Matrix(AbstractMatrix):
         for row in range(1,self.rows+1):
             for col in range(1,self.cols+1):
                 # matrix = matrix + "(row:" + str(row+1) + " column:" + str(col+1) + "): "
-                matrix = matrix +  str(self[row,col]) + "\t"
+                matrix = matrix + str(self[row,col]) + "\t"
             matrix = matrix + "\n"
         return matrix
 
@@ -199,38 +203,59 @@ class Matrix(AbstractMatrix):
         """
         pass
 
-    def get_matrix_smaller_element(self, matrix):
-        smaller_element = matrix.data[0]
-        for element in matrix.data:
-            if element < smaller_element:
-                smaller_element = element
-        return smaller_element
+    def float_format(self):
+        res = Matrix(self.rows, self.cols)
+        for i in range(1, self.rows + 1):
+            for j in range(1, self.cols + 1):
+                res[i, j] = float("{0:.2f}".format(self[i, j]))
+        return res
 
-    def get_eigen_value(self, NORMALIZED_X):
-        X = NORMALIZED_X.transpose();
-        # Matrix(NORMALIZED_X.cols, NORMALIZED_X.rows, NORMALIZED_X.data);
-        A = self.dot(NORMALIZED_X);
-        A = A.transpose();
-        adotx = A.dot(NORMALIZED_X)
-        xdotx = X.dot(NORMALIZED_X)
-        return adotx/xdotx
+    def normalized (self):
+        vector = self.data
+        soma = 0
+        for v in vector:
+            square = v*v
+            soma+=square
+        res = math.sqrt(soma)
+        return res
 
-    def get_eigen_vector(self, EIGENVALUE, NORMALIZED_X):
-        return EIGENVALUE[1,1] * NORMALIZED_X
+    def get_matrix_bigger_element(self):
+        bigger = self.data[0]
+        for element in self.data:
+            if element > bigger:
+                bigger = element
+        return bigger
 
-    # A = matrix nxn
     def eigen(self):
-        A = self
-        print(A)
-        # gera B 
-        # B = A - lambda/|v1| . v1 . v1T
-        eigensA = self.power_method()
-        # qtdeIteracoes n
-        
-        return eigensA
+        print('matriz: \n' + str(self))
+        result = self.power_method()
+        eigenvalue = result[0]
+        eigenvector = result[1]
+        print('eigenvalue: \n' + str(eigenvalue))
+        print('eigenvector: \n' + str(eigenvector))
+
+        B = self.deflation(eigenvalue,eigenvector)
+        print('B: \n' + str(B))
+
+        result = B.power_method()
+        eigenvalue = result[0]
+        eigenvector = result[1]
+        print('eigenvalue: \n' + str(eigenvalue))
+        print('eigenvector: \n' + str(eigenvector))
+
+        B2 = B.deflation(eigenvalue, eigenvector)
+        print('B: \n' + str(B))
+
+        result = B2.power_method()
+        eigenvalue = result[0]
+        eigenvector = result[1]
+        print('eigenvalue: \n' + str(eigenvalue))
+        print('eigenvector: \n' + str(eigenvector))
+
+        return  eigenvalue, eigenvector
 
     def power_method(self):
-        MAX_ITERATIONS = 100
+        MAX_ITERATIONS = 9
         MATRIX_SIZE = self.rows
         ITERATION = 1
 
@@ -238,19 +263,38 @@ class Matrix(AbstractMatrix):
         matriz_inicial = Matrix(MATRIX_SIZE, 1, data)
 
         while ITERATION <= MAX_ITERATIONS:
-            X = self.dot(matriz_inicial)
-            matriz_inicial = X
-            menor_matriz = self.get_matrix_smaller_element(X)
+            print('ITERAÇÃO ' + str(ITERATION))
+            print('A= \n'+ str(self))
+            print('\nx= \n' + str(matriz_inicial))
+            x = self.dot(matriz_inicial)
+            x = (1/x.get_matrix_bigger_element()) * x
+            print('x'+str(ITERATION)+'= ' + str(x))
+            matriz_inicial = x
             ITERATION += 1
-        NORMALIZED_X = X / menor_matriz
+        x = self.dot(matriz_inicial)
 
-        eigenvalues = self.get_eigen_value(NORMALIZED_X)
-        eigenvectors = self.get_eigen_vector(eigenvalues, NORMALIZED_X)
-        return [eigenvalues[1, 1], [eigenvectors[1, 1], eigenvectors[1, 2], eigenvectors[1, 3]]]
+        #get eigenvalue
+        eigenvalue = x.get_matrix_bigger_element()
+        eigenvalue = float("{0:.2f}".format(eigenvalue))
+        print('eigenvalue= ' + str(eigenvalue))
 
+        #get eigenvector
+        eigenvector = (1 / x.get_matrix_bigger_element()) * x
+        eigenvector = eigenvector.float_format()
+        print('eigenvector= \n' + str(eigenvector))
 
-        # v - autovetor que eu descobri
-        # v1 * v1T(transposta)
-        # lambda auto valor
-        # lambda/modulo auto vetor
-        # B = A - lambda/|v1| . v1 . v1T
+        return eigenvalue, eigenvector
+
+    def deflation(self, eigenvalue, eigenvector):
+        result = eigenvalue*(eigenvector.dot(eigenvector.transpose()))
+        B = self - result
+        return B
+
+    def pagerank(self):
+        # r(t+1) = h r(t)
+        data = [1/self.rows] * (self.rows * 1)
+        matriz_inicial = Matrix(self.rows, 1, data)
+
+        result = self.dot(matriz_inicial)
+        print(result)
+        pass
